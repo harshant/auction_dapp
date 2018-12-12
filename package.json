@@ -1,0 +1,19 @@
+{
+  "name": "auction_dapp",
+  "version": "1.0.0",
+  "description": "simple auction dapp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshant/auction_dapp.git"
+  },
+  "author": "harshant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harshant/auction_dapp/issues"
+  },
+  "homepage": "https://github.com/harshant/auction_dapp#readme"
+}
