@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/harshant/auction_dapp/issues"
   },
-  "homepage": "https://github.com/harshant/auction_dapp#readme"
+  "homepage": "https://github.com/harshant/auction_dapp#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "web3-js": "^1.0.5-beta.26"
+  },
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  }
 }
