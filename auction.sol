@@ -21,13 +21,19 @@ contract Auction{
     
     event NewHighestBid(address Bidder, uint amount);
     event AuctionEnded(address HighestBidder, uint HighestBid);
+    event WithdrawSuccess(address Bidder, uint amount);
     
     modifier OnlyOwner{
-        require(msg.sender == Owner);
+        require(msg.sender == Owner, "Yor are not Owner of this Auction");
         _;
     }
     
-    function Bid(uint amount) payable public{
+    modifier IsRunning{
+        require (now <= EndingTime, "Auction has ended");
+        _ ;
+    }
+    
+    function Bid(uint amount) public IsRunning payable{
         if(amount > HighestBid && Islive == true){
             BidderAcc[msg.sender] = amount;
             HighestBid = amount;
@@ -39,12 +45,24 @@ contract Auction{
         }
     }
     
-    function Withdraw() payable public{
+    function Withdraw() public payable returns(bool){
         if(BidderAcc[msg.sender] > 0){
+            uint AmountSend = BidderAcc[msg.sender];
             BidderAcc[msg.sender] = 0;
-            msg.sender.transfer(BidderAcc[msg.sender]);
+            if(!msg.sender.send(BidderAcc[msg.sender])) {
+                BidderAcc[msg.sender] = AmountSend;
+                return false;
+            }
+            else{
+                emit WithdrawSuccess(msg.sender,AmountSend);
+                return true;
+            }
         }
         
+    }
+    
+    function EndBid() public OnlyOwner{
+        Islive = false;
     }
     
 }
