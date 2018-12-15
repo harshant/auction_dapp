@@ -3,18 +3,19 @@ pragma solidity ^0.4.25;
 
 contract Auction{
     
-    uint EndingTime;
-    address Owner;
-    uint HighestBid;
-    address HighestBidder;
-    bool Islive = false;
-    mapping (address => uint) BidderAcc;
+    //using public variables so that any user can query them at any time
+    uint public EndingTime;
+    address public Owner;
+    uint public HighestBid;
+    address public HighestBidder;
+    bool public Islive = false;
+    mapping (address => uint) public BidderAcc;
     
     constructor(uint InitialVal, uint endtime) public{
         Owner = msg.sender;
         EndingTime = endtime;
         HighestBid = InitialVal;
-        if(endtime > now){
+        if(endtime > now){          // The truth that a miner can manipulate now(block.timestamp) is not much of a concern here
             Islive = true;
         }
     }
@@ -30,13 +31,13 @@ contract Auction{
     
     modifier IsRunning{
         require (now <= EndingTime, "Auction has ended");
-        _ ;
+        _;
     }
-    
-    function Bid(uint amount) public IsRunning payable{
-        if(amount > HighestBid && Islive == true){
-            BidderAcc[msg.sender] = amount;
-            HighestBid = amount;
+    // DAO type of attacks are not possible because of separate withdraw function
+    function Bid() public IsRunning payable{
+        if(msg.value > HighestBid && Islive == true){
+            BidderAcc[msg.sender] = msg.value;
+            HighestBid = msg.value;
             HighestBidder = msg.sender;
             emit NewHighestBid(HighestBidder, HighestBid);
         }
@@ -49,8 +50,8 @@ contract Auction{
         if(BidderAcc[msg.sender] > 0){
             uint AmountSend = BidderAcc[msg.sender];
             BidderAcc[msg.sender] = 0;
-            if(!msg.sender.send(BidderAcc[msg.sender])) {
-                BidderAcc[msg.sender] = AmountSend;
+            if(!msg.sender.send(BidderAcc[msg.sender])) {    //send does not allow expensive fallback function due to limited gas available
+                BidderAcc[msg.sender] = AmountSend;          //error handling is important for transaction
                 return false;
             }
             else{
@@ -61,7 +62,7 @@ contract Auction{
         
     }
     
-    function EndBid() public OnlyOwner{
+    function EndBid() public OnlyOwner{    //Only the owner of the contract can stop the live auction
         Islive = false;
     }
     
