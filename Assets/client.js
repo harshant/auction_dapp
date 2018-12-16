@@ -194,7 +194,8 @@ var AuctionContractABI = [
 if (typeof web3 !== 'undefined') {
     web3 = new Web3(web3.currentProvider);  // web3.ethereum is also available for modern browsers
    } else {
-    // set the provider you want from Web3.providers
+	// set the provider you want from Web3.providers
+	alert('Non-Ethereum browser detected. You should consider trying MetaMask! Now trying for Ganache(testRPC)');
     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
    }
 
@@ -244,17 +245,17 @@ window.onload = function () {
 
 	ContractInstance.HighestBid(function (err,res) {
 		$('#raised').html(res.c[0]);	
-	  });
+	});
 	
 	ContractInstance.EndingTime(function (err,res) {
 		countDownDate = res.c[0]*1000;	
-	 });
+	});
 
-	 ContractInstance.HighestBidder(function (err,res) {
+	ContractInstance.HighestBidder(function (err,res) {
 		$('#highestBidder').html(res.substring(0,12)+"...");	
-	  });
+	});
 
-	  web3.eth.getBalance(web3.eth.defaultAccount,function(err,res){
+	web3.eth.getBalance(web3.eth.defaultAccount,function(err,res){
 		  $('#accountBalance').html(res.c[0]/10000);
-		});
+	});
 }
