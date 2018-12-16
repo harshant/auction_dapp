@@ -7,31 +7,26 @@
     <h4>Deployed on Ethereum + IPFS</h4>
 
     <hr />
-    <h5><img src="Assets/live.gif" height="26" width="26">Auction is Live</h5>
+    <h5><img id="live" src="Assets/live.gif" height="26" width="26">Auction is Live</h5>
     <div class="row">
       <div class="column">
         <label>Beneficiary</label>
-        <blockquote><p><em id="beneficiary">Loading..</em><br /><br /></p></blockquote>
+        <blockquote><p><em id="beneficiary">0xa448f08d6dDBa559CF42...</em><br /><br /></p></blockquote>
       </div>
       <div class="column">
-        <label>Raised</label>
-        <blockquote><p><em><span id="raised">Loading..</span><br />ETH</em></p></blockquote>
+        <label>Highest Bid</label>
+        <blockquote><p><em><span id="raised">Loading..</span><br />WEI</em></p></blockquote>
       </div>
       <div class="column">
         <label>Timeleft</label>
-        <blockquote><p><em id="timeleft">Loading..</em><br />seconds</p></blockquote>
+        <blockquote><p><em id="timeleft">Loading..</em><br /></p></blockquote>
       </div>
       <div class="column">
         <label>Highest Bidder</label>
-        <blockquote><p><em><span id="highestBidder"></span><br />
-        <span id="highestBid"></span> ETH</em></p></blockquote>
+        <blockquote><p><em id="highestBidder"></em><br /><p/></blockquote>
       </div>
       <div class="column">
-        <label>Your Account<label>
-        <blockquote><p><em id="accountAddress">Loading..</em><br /><br /></p></blockquote>
-      </div>
-      <div class="column">
-        <label>Balance</label>
+        <label>Balance Remaining</label>
         <blockquote><p><em id="accountBalance">Loading..</em><br />ETH</p></blockquote>
       </div>
     </div>
@@ -41,14 +36,11 @@
       <thead>
         <tr>
           <th>Bidder's Address on Ethereum</th>
+          <th>Transaction Hash</th>
           <th>Amount</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Stephen Curry eth address</td>
-          <td>27</td>
-        </tr>
+      <tbody id="tbody">
       </tbody>
     </table>
     <hr/>
@@ -56,27 +48,31 @@
     <div class="row">
       <div class="column column-33">
         <label>From Account</label>
-        <input type="number" id="Address" placeholder=0x00000>
+        <h5 id="defacc"></h5>
       </div>
       <div class="column column-25">
         <label>Bid Amount</label>
         <input type="number" id="bidAmount" placeholder="28300 ether">
       </div>
-      <div class="column column-25">
+      <div id="app" class="column column-25">
+          <label><br /></label>
+          <img id="loader" height="45" width="45" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+      </div>
+      <div id="dissapp" class="column column-25">
         <label><br /></label>
         <button id="makeBid">Bid</button>
       </div>
+
     </div>
 
     <hr />
 
-    <button id="endAuction" disabled="disabled">End Auction</button>
+    <button id="endAuction" >End Auction</button>
 
     <br /><br />
-    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js" ></script>
+    <script src="Assets/countdown.js"></script>
+    <script src="Assets/web3.js" ></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="Assets/client.js"></script>
   
   </body>

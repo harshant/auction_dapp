@@ -1,19 +1,15 @@
 // client side code to interact with smartcontract
 
-var web3 = new Web3("ws://localhost:8545"); //using injected provider by metamask if available
-
-Web3.givenProvider.enable();
-//web3.eth.sendTransaction({from: '0x123...', data: '0x432...'})
-//.once('transactionHash', function(hash){ ... })
-//.once('receipt', function(receipt){ ... })
-//.on('confirmation', function(confNumber, receipt){ ... })
-//.on('error', function(error){ ... })
-//.then(function(receipt){
-    // will be fired once the receipt is mined
-//});
-
-web3.eth.defaultAccount = web3.eth.accounts[0]; //using the first account as default
 var AuctionContractABI = [
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "Bid",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
 	{
 		"constant": false,
 		"inputs": [],
@@ -21,39 +17,6 @@ var AuctionContractABI = [
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "HighestBid",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "BidderAcc",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -68,76 +31,6 @@ var AuctionContractABI = [
 		],
 		"payable": true,
 		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "EndingTime",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "Bid",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "HighestBidder",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "Islive",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "Owner",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -205,20 +98,163 @@ var AuctionContractABI = [
 		],
 		"name": "WithdrawSuccess",
 		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "BidderAcc",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "EndingTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "HighestBid",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "HighestBidder",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "Islive",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "Owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ];
 
-var ContractObj = new web3.eth.Contract(AuctionContractABI,'0xab365be129078e87667fd4a8f84e3f6f9bdd3e6d');
+// Initializing web 3 instnace
+if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);  // web3.ethereum is also available for modern browsers
+   } else {
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+   }
 
+web3.eth.defaultAccount = web3.eth.accounts[0]; //using the first account as default
+
+var CObj = web3.eth.contract(AuctionContractABI);
+ContractInstance = CObj.at('0xd90cf6a5388eee5278ef74e225e0c95061a598bd');
+
+
+//Application code
+var TransactionHash;
+$('#app').hide();
 $('#makeBid').click(function(){
-     ContractObj.methods.Bid(parseInt($('#bidAmount').val()));
+    ContractInstance.Bid({from:web3.eth.defaultAccount,value:parseInt($('#bidAmount').val())},function (error, result) {
+		$('#app').show();
+		$('#dissapp').hide();
+		if (!error){
+			console.log(result);
+			TransactionHash = result;
+		}
+        else
+            console.error(error);
+    });
+     
 });
 
-ContractObj.events.NewHighestBid(function(err,result){
-    if(!err){
-    $('#tbody').innerHTML += '<tr><td>'+result[0]+'</td><td>'+result[1]+'</td></tr>';
-    }
-    else{
-        console.log("error in placing bid");
-    }
+ContractInstance.NewHighestBid().watch(function(err,result){
+	if(!err){
+		$('#tbody').append('<tr><td>'+result.args.Bidder+'</td><td>'+TransactionHash+'</td><td>'+result.args.amount+' WEI</td></tr>');
+		$('#raised').html(result.args.amount);
+		$('#app').hide();
+		$('#dissapp').show();
+	}
+	else{
+			console.log("error in placing bid");
+	}
 });
+
+
+// Client code after loding
+window.onload = function () {  
+
+	$('#defacc').html( web3.eth.defaultAccount.substring(0,20)+"...");
+	if( web3.eth.defaultAccount !== '0xa448f08d6ddba559cf421e25843ab673f93a7769'){
+		$('#endAuction').hide();
+	}
+
+	ContractInstance.HighestBid(function (err,res) {
+		$('#raised').html(res.c[0]);	
+	  });
+	
+	ContractInstance.EndingTime(function (err,res) {
+		countDownDate = res.c[0]*1000;	
+	 });
+
+	 ContractInstance.HighestBidder(function (err,res) {
+		$('#highestBidder').html(res.substring(0,12)+"...");	
+	  });
+
+	  web3.eth.getBalance(web3.eth.defaultAccount,function(err,res){
+		  $('#accountBalance').html(res.c[0]/10000);
+		});
+}
